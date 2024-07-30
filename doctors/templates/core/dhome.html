@@ -30,7 +30,7 @@
     <div class="content">
         {% if data %}
         {% for i in data %}
-            <div class="items">
+            <div class="items" onclick='window.location.href="{% url 'appointform' i.id %}"'>
                 <p>Dr. {{i.name}}</p>
                 <p>{{i.degree }}</p>
                 <p>{{i.speciality}}</p>

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import myform
+from .forms import myform,Appointmentform
 from .models import Doctor
 
 
@@ -37,3 +37,13 @@ def searchBar(request):
         form1=myform()
 
     return render(request,'core/dhome.html',context={'data':doctors})
+
+
+def appointform(request,id):
+    if request.method=='POST':
+        appointForm=Appointmentform(request.POST)
+        print('this is doctor id',id)
+    else:
+        appointForm=Appointmentform()
+        print('this is req obj',request)
+        return render(request,'core/appointForm.html',{'form':appointForm,})
