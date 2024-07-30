@@ -1,0 +1,29 @@
+body{
+   /* background: linear-gradient(45deg red  blue);
+    */
+}
+#about-content-container{
+   padding: 20px;
+   /* background:linear-gradient(45deg, #FF6F59 ,#DB504A,rgb(234, 204, 53));  */
+   background: radial-gradient(circle,#ff6f59a1,#ffff);
+   /* background-color: #838d8a; */
+}
+.about-content{
+    overflow-wrap: break-word;
+    padding: 25px;
+    border-radius: 15px;
+    width:inherit ;
+    box-shadow: 3px 3px 13px rgb(191, 191, 191);
+    font-size: 1.1rem;
+    background-color: white;
+}
+.about-content p,h3{
+    margin: 10px 0;
+
+}
+.about-content p{
+    margin-bottom: 20px;
+}
+.about-content li{
+    list-style-position: inside;
+}

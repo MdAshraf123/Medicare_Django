@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'cssstyle/register.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <div id="loginpage">
+        <h2>Register</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit"></input>
+            
+        </form>
+        <p>If you already have an accout <a href="/login/">Login</a></p>
+    </div> 
+</body>
+</html>

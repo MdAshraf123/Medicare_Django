@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'cssstyle/profile.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <button type="button" onclick ="window.location.href= '{% url 'main:home' %}'">Back</button>
+    <h1>Your Profile</h1>
+    <p><strong>First Name:</strong> {{first_name}}</p>
+    <p><strong>Last Name:</strong> {{last_name}}</p>
+    <p><strong>User Id:</strong> {{userid}}</p>
+    <p><strong>User Name:</strong> {{username}}</p>
+    <p><strong>Password:</strong> {{password}}</p>
+    <p><strong>Email Add:</strong> {{gmail}}</p>
+    <h1>Your Appointment</h1>
+</body>
+</html>

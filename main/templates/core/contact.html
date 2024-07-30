@@ -1,0 +1,64 @@
+{% extends 'core/index.html' %}
+{% load static %}
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'cssstyle/about.css' %}">
+{% endblock css %}
+{% block bodycontent %}
+<div id="about-content-container">
+    <div class="about-content">
+        <h1>Contact Us</h1>
+        <h3>Get In Touch</h3>
+        <p>We'd love to hear from you! Whether you have questions about our services, need assistance,
+             or just want to share your feedback, our team is here to help.
+        </p>
+        <br>
+        <h3>Contact Information</h3>
+        <ul>
+            <li>
+                Phone: +91 576188048
+            </li>
+            <li>
+                Email: support@doctorshub.com
+            </li>
+            <li>Address: 123 Health st, Delhi City, CA 90210, USA</li>
+        </ul>
+        <br>
+        <h3>
+            Business Hours
+        </h3>
+        <ul>
+            <li>Monday - Friday: 9:00 AM - 6:00 PM</li>
+            <li>Saturday: 10:00 AM - 4:00 PM</li>
+            <li>Sunday: Closed</li>
+        </ul>
+        <br>
+        <h3>Follow Us</h3>
+        <p>Stay connected with us through social media:</p>
+        <ul>
+            <li>Facebook</li>
+            <li>Twitter</li>
+            <li>Instagram</li>
+            <li>LinkedIn</li>
+        </ul>
+        <br>
+        <h3>Contact Form</h3>
+        <br>
+        <h3>Our Locations</h3>
+        <p>
+            We have multiple offices to server you better. Find the one nearest to you:
+        </p>
+        <ul>
+            <li>Downtown Wellness Center</li>
+            <ul>
+                <li>456 City Rd., Wellness City, CA 90210</li>
+                <li>Phone: +91 576188048</li>
+            </ul>
+        </ul>
+    </div>
+</div>
+
+
+
+
+{% endblock bodycontent %}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <link rel="stylesheet" href="{% static 'cssstyle/login.css' %}">
+    <link
+    href="https://fonts.googleapis.com/css2?family=Delius&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Spectral:ital@1&display=swap"
+    rel="stylesheet">
+</head>
+<body>
+    <div id="loginpage">
+        
+        <h1>Log in</h1>
+        <form method="post" action="" name="loginForm">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit" value="Login">
+        </form> 
+        <p>If you don't have account <a href='/register/'>Register</a></p>
+    </div>
+</body>
+</html>

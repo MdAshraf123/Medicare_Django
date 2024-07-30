@@ -1,0 +1,85 @@
+{% extends 'core/index.html' %}
+{% load static %}
+{% block css %}
+{{block.super}}
+
+<link rel="stylesheet" href="{% static 'doctorsCss/dhome.css' %}">
+{% endblock css %}
+{% block bodycontent %}
+<div class="body-container">
+    <div class="search-container">
+        <div class="filter-buttons">
+            <button onclick="window.location.href='{% url 'filterView' 'Ped' %}'">Pediatrician(Child)</button>
+            <button onclick="window.location.href='{% url 'filterView' 'Car' %}'">Cardiologist</button>
+            <button onclick="window.location.href='{% url 'filterView' 'Der' %}'">Dermatologist</button>
+            <button onclick="window.location.href='{% url 'filterView' 'Gas' %}'">Gastroenterologist</button>
+            <button onclick="window.location.href='{% url 'filterView' 'Hem' %}'">Hematologist</button>
+            <button onclick="window.location.href='{% url 'filterView' 'ENT' %}'">ENT</button>
+            <button onclick="window.location.href='{% url 'filterView' 'Den' %}'">Dentist</button>
+        </div>
+        <div id="search-bar">
+            <form  action="{% url 'searching' %}" method="post">           
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="text" placeholder="Search with doctor name" name="userQuery" class="text-field">
+                <input type="submit" id="search" value="search">
+            </form>
+           
+        </div>
+    </div>
+    <div class="content">
+        {% if data %}
+        {% for i in data %}
+            <div class="items">
+                <p>Dr. {{i.name}}</p>
+                <p>{{i.degree }}</p>
+                <p>{{i.speciality}}</p>
+                <p>{{i.hospital}}</p>
+                <p>{{i.address}}</p>
+                <p>{{i.p_count}}</p>
+            </div>
+        {% endfor %}
+        {% else %}
+            <p>Data not found</p>
+        {% endif %}
+           
+    </div>
+</div>
+<!-- <script>
+    $(document).ready(function(){
+        $('#btn-search').click(
+            function event(){
+                console.log('btn clicked');
+                let value=$('.text-field').val();
+                let data1={
+                    'value':value,
+                }
+                $.ajax(
+                    {
+                    // url:
+                    type:'POST',
+                    data:data1,
+                    success:function(response){
+                        console.log(response);
+                    },
+                    error:function(xhr,status,error){
+                        console.log(xhr.responseText);
+                    }
+
+                })
+                // let xhr=new XMLHttpRequest();
+                // xhr.open('POST','',true);
+                // xhr.onload=function(){
+                //     console.log(this.responseText);
+                // };
+
+                // xhr.send(data);
+            }
+        )
+
+
+
+    })
+</script> -->
+
+{% endblock bodycontent %}

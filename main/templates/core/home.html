@@ -1,0 +1,62 @@
+{% extends 'core/index.html' %}
+{% load static %}
+{% block css %}
+{{block.super}}
+<link rel="stylesheet" href="{% static 'cssstyle/home.css' %}">
+{% endblock css %}
+
+{% block bodycontent %} 
+<div id="main-banner" >
+    <h1>Doctors Hub</h1>
+    <h3>Connect with Top Doctors and Book Your Appointments<br> Anytime, Anywhere at DoctorsHub!</h3>
+    <a href="{% url 'main:profile' %}">
+    <div id="search-bar">
+        <h2>You are welcome {{request.user.username}}</h2>
+        <!-- <input type="text" placeholder="Search Doctor & Hospital" class="text-field">
+        <div class="search-icon">
+            <button>Search</button>
+        </div> -->
+    </div>
+    </a>
+</div>
+<div class="top-doc-container">
+    
+    <div class="top-docHos-div">
+        <br>
+        
+        <h2>Our Top Doctors</h2>
+        <br>
+        <div class="inner-container">
+            {% for item in TopD %}
+            <div class="topdoc-cards">
+                <img src="{{item.dimage}}" alt="image">
+                <div>
+                    <h2>Dr. {{item.dname}}</h2>
+                    <p>{{item.ddegree}}</p>
+                    <p>{{item.dspeciality}}</p>
+                    <p>{{item.dexprience}}</p>
+                    <p>{{item.dhospital}}</p>
+                    <p>{{item.daddress}}</p>
+                    
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+        <br>
+    </div>
+    <hr>
+    
+    <div class="top-docHos-div">
+        <br>
+        <h2>Our Top Hospitals</h2>
+        <br>
+        <div class="inner-container">
+            <div class="topdoc-cards"></div>
+        </div>
+        <br>
+    </div>
+    
+</div>
+
+{% endblock bodycontent %}
