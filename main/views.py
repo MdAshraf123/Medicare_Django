@@ -48,9 +48,10 @@ def logout_view(request):
 def homepage(request):
     TopD=Topdoc.objects.all()
     return render(request,f'core/home.html',{'TopD':TopD})
-
+@login_required
 def profile(request):
     obj=Appointment.objects.filter(userid=request.user.id)
+    # obj2=Appointment.Doctor.objects.filter(id=obj.d_id)
     user = request.user  # Get the currently logged-in user
     context = {
         'first_name':user.first_name,
@@ -60,8 +61,11 @@ def profile(request):
         'password': '********' , # Display password in dotted format
         'gmail':user.email,
         'appointData':obj,
+        
     }
     return render(request,'core/profile.html',context)
+
+
 @login_required
 def contactpage(request):
     return render(request,'core/contact.html')

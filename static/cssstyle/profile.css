@@ -1,0 +1,47 @@
+*{
+    margin:0px;
+    padding:0;
+    box-sizing: border-box;
+    max-width: 100vw;
+    font-family: nunito;
+    font-weight: 600;
+
+}
+.nav-bar{
+    display: flex;
+    align-items: center;
+    height:50px ;
+    background: linear-gradient(45deg,#CC5A71 , transparent);
+}
+.container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 20px;
+    margin-top:35px;
+}
+.container table{
+    border: solid 0.5px;
+    border-radius: 20px;
+    padding:30px;
+    width:60%;
+}
+.container table tr,td{
+    border: solid 0.5px;
+    padding: 6px;
+}
+
+button{
+    background-color: transparent;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    border:none;
+}
+button:active{
+    background-color: rgb(160, 160, 161);
+}
+.body{
+    padding: 25px;
+}

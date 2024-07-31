@@ -63,7 +63,10 @@
     border: none;
     border-radius: 0 50px 50px 0;
     cursor: pointer;
-    
+    font-size: 25px;
+}
+#search:active{
+    background-color: rgb(160, 160, 161);
 }
 .search-icon {
     height: 80px;

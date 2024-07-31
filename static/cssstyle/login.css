@@ -16,12 +16,12 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 45vh;
+    height: auto;
     width:30vw;
     padding:10px;
     border-radius: 10px;
     border:solid 0.5 brown;
-    background-color:#FFD9CE ;
+    background-color:rgb(255, 215, 204) ;
 }
 #loginpage h1{
     margin:10px 25px;

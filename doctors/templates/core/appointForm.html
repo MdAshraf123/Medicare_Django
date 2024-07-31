@@ -1,16 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/mainlogo.png' %}">
     <title>Document</title>
+    <style>
+        body{
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+           
+            width:30vw;
+            padding:10px;
+            border-radius: 10px;
+            border:solid 0.5 brown;
+            background-color:rgb(255, 215, 204) ;
+        }
+        h1{text-align: center;}
+        .form form input{
+            margin:10px 10px;
+            width:20vw;
+            height:25px;
+            padding:2px;
+        }
+    </style>
 </head>
 <!-- /d_app/5/appointform/ -->
 <body>
+    
+    <div class="form">
+    <h1>Appointment Form</h1>
     <form action="{% url 'appointform' id %}" method="post">
         {{form.as_p}}
         {% csrf_token %}
         <input type="submit" name="Book">
     </form>
+</div>
 </body>
 </html>
