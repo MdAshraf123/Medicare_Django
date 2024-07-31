@@ -11,3 +11,16 @@ class Doctor(models.Model):
 
     def __str__(self):
         return f"{self.name},{self.speciality}"
+    
+class Appointment(models.Model):
+    userid=models.IntegerField(null=True)
+    d_id=models.ForeignKey(Doctor, on_delete=models.CASCADE,null=True)
+    P_name=models.CharField(max_length=30)
+    P_age=models.IntegerField()
+    state=models.CharField(max_length=25)
+    dist=models.CharField(max_length=25)
+    appoint_date=models.DateField()
+    appoint_time=models.TimeField()
+    def __str__(self):
+        return f'{self.userid},{self.d_id},{self.P_name}'
+

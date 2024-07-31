@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import myform,Appointmentform
-from .models import Doctor
+from .models import Doctor,Appointment
 
 
 # Create your views here.
@@ -41,9 +41,15 @@ def searchBar(request):
 
 def appointform(request,id):
     if request.method=='POST':
-        appointForm=Appointmentform(request.POST)
         print('this is doctor id',id)
+        form = Appointmentform(request.POST)
+        if form.is_valid():
+            appointment = form.save(commit=False)
+            appointment.id = id
+            appointment.userid=request.user.id
+            appointment.save()
+            return HttpResponse('booking successfull')
     else:
         appointForm=Appointmentform()
         print('this is req obj',request)
-        return render(request,'core/appointForm.html',{'form':appointForm,})
+        return render(request,'core/appointForm.html',{'form':appointForm,'id':request.user.id})

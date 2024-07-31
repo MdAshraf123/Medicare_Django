@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<!-- /d_app/5/appointform/ -->
 <body>
-    <form action="/d_app/appointmentForm/" method="post">
+    <form action="{% url 'appointform' id %}" method="post">
         {{form.as_p}}
         {% csrf_token %}
         <input type="submit" name="Book">

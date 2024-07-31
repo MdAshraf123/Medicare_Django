@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout
 from .form import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from doctors.models import Appointment
 
 
 # Create your views here.
@@ -22,9 +23,11 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
+        
         form = AuthenticationForm(request,data=request.POST)
         if form.is_valid():     
             user = form.get_user()
+            print('user_Id',user.id)
             print(user.username,user.password)
             login(request, user)
             return redirect('main:home')
@@ -47,6 +50,7 @@ def homepage(request):
     return render(request,f'core/home.html',{'TopD':TopD})
 
 def profile(request):
+    obj=Appointment.objects.filter(userid=request.user.id)
     user = request.user  # Get the currently logged-in user
     context = {
         'first_name':user.first_name,
@@ -54,7 +58,8 @@ def profile(request):
         'userid': user.id,
         'username': user.username,
         'password': '********' , # Display password in dotted format
-        'gmail':user.email
+        'gmail':user.email,
+        'appointData':obj,
     }
     return render(request,'core/profile.html',context)
 @login_required

@@ -17,5 +17,14 @@
     <p><strong>Password:</strong> {{password}}</p>
     <p><strong>Email Add:</strong> {{gmail}}</p>
     <h1>Your Appointment</h1>
+    {% for i in appointData %}
+    <p><strong>Patients name: </strong>{{i.P_name}}</p>
+    <p><strong>Patients Age: </strong>{{i.P_age}}</p>
+    <p><strong>State: </strong>{{i.state}}</p>
+    <p><strong>City: </strong>{{i.dist}}</p>
+    <p><strong>Appointment Date: </strong>{{i.appoint_date}}</p>
+    <p><strong>Appointment Time: </strong>{{i.appoint_time}}</p>
+    <br><br>
+    {% endfor %}
 </body>
 </html>
