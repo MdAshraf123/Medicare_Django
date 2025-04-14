@@ -1,1 +1,1 @@
-web: gunicorn DoctorsHub.wsgi --log-file -
+web: gunicorn medicare.wsgi --log-file -
