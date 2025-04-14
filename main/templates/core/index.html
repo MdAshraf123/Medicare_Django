@@ -9,7 +9,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Delius&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Spectral:ital@1&display=swap"
         rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <!-- <script src="https://kit.fontawesome.com/4fe02a54d3.js" crossorigin="anonymous"></script> -->
     {% block css %}
@@ -18,35 +19,130 @@
     
 </head>
 <body>
+
+<!--##########    Navigation Bar   ############-->
     <div id="navbar" >
         <div id="logo-container">
             <div id="logo" >
                 <img src="{% static 'images/mainlogo.png' %}">
-        </div><span> DoctorsHub</span></div>
+            </div><span> DoctorsHub</span></div>
         <div id="navcontent">
             <nav>
-                <a href="{% url 'main:home' %}">Home</a>
+                <a href="{% url 'main:home' %}?id=1" class="activated">Home</a>
                 <a href="{% url 'doctors' %}">Doctors</a>
                 <a href="{% url 'main:hospitals' %}">Hospitals</a>
                 <a href="{% url 'main:contact' %}">Contact</a>
                 <a href="{% url 'main:about' %}">About</a> 
                 <!-- <a href="{% url 'main:logout' %}">Logout</a> 
                   -->
-                  {% if user.is_authenticated %}
-                  
+            </nav>
+        </div>
+
+        <!-- ######## Profile-image button in nav bar ( right side ) ##########-->
+        <div class="profile-container">
+            <div id="profile-button" class="add-p-image" style="background-image: url('{{ profileImageURL }}');"></div>
+            <div id="profile-content">
+                <div class="p-c-user-container">
+                        <!-- <div id="profile-button" class="add-p-image" style="background-image: url('{{ profileImageURL }}');" ></div> -->
+                        <div class="profile-imgCont ">
+                            <img src="{{ profileImageURL }}" alt="Profile Image" class="profile-image">
+                            <input type="file" hidden accept=".jpg, .jpeg" id="profile-image-input">
+                            {% if user.is_authenticated %}
+                            <label for="profile-image-input" class="upload-label">
+                                <div class="edit-button"></div>
+                            </label>
+                            {% endif %}
+                        </div>
+                    
+                    <h3>{{user.first_name}} {{user.last_name}}</h3>
+                </div>
+                <div class="p-c-content-buttons" >
+                    {% if not user.is_authenticated %}
+                        <a class="p-c-buttons" href="{% url 'main:login' %}">Login</a>
+                        <a class="p-c-buttons" href="{% url 'main:register' %}">Sign Up</a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                     <a class="p-c-buttons" id="get-profile" >Profile </a> <!--<span class="notify-Bubble"></span>-->
+                     <button class="p-c-buttons">Appointments</button>
+                     <button class="p-c-buttons">History</button>
                       <form action="{% url 'main:logout' %}" method="post" style="display: inline;">
                           {% csrf_token %}
-                          <button type="submit">Logout</button>
+                          <button  type="submit" class="p-c-buttons">Logout</button>
                       </form>
                   {% endif %}
-            </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--#######     Pop-up profile view    #######-->
+    <div class="overlay">
+        <div class="popup"> 
+            <form id="popup-profile-form" style="height:100%">
+                <table class="table-content">
+                    <tr class="head-row">
+                        <td class="profile-td-container" >
+                            <div class="profile-td">
+                                <div class="profile-imgCont">
+                                    <img src="{{ profileImageURL }}" alt="Profile Image"   class="profile-image">
+                                    <input type="file" hidden accept=".jpg, .jpeg" id="profile-image-input">
+                                    <label for="profile-image-input" class="upload-label">
+                                        <div class="edit-button"></div>
+                                    </label>
+                                </div>
+                                <div class="username-email">
+                                    <h3>{{user.first_name}} {{user.last_name}}</h3>
+                                    <p style="font-size: 11px;">{{user.email}}</p>
+                                </div> 
+
+                                <button id="closePopup-profile" type="button"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div class="message-box">
+                                <p>Complete your profile</p>
+                            </div>
+                        </td>
+            
+                    </tr>
+                    <tr>
+                        <td>User name </td>
+                        <td>{{user.username}}</td>
+                    </tr>
+                    <tr>
+                        <td>First name </td>
+                        <td><input type="text" value="{{user.first_name}}" name="first_name" placeholder="First name" required></td>
+                    </tr>
+                    <tr>
+                        <td>Last name </td>
+                        <td><input type="text" name="last_name" value="{{user.last_name}}" placeholder="Last name" required ></td>
+                    </tr>
+                    <tr>
+                        <td >Email account </td>
+                        <td><input type="email" name="email" value="{{user.email}}" style="width:100%;" placeholder="Email" required></td>
+                    </tr>
+                    <tr>
+                        <td>Mobile number </td>
+                        <td><input type="text" name="phone" value="{{ profileRemainigData.phone }}" placeholder="Phone number (10 digits only)" required></td>
+                    </tr>
+                    <tr>
+                        <td>Location </td>
+                        <td><input type="text" value="{{ profileRemainigData.location }}" name="location" placeholder="State, District, village" required></td>
+                    </tr>
+                </table>
+                <button  id="save-changes">Save Change</button>
+                <div class="isSave-message">
+                    <p></p>
+                </div>
+
+            </form>
         </div>
     </div>
     {% block bodycontent %}{% endblock bodycontent %}
 
+<!-- ######## Footer Pane  #############-->
     <div id="footer-div">
         <footer>
-            <div>
+            <div class="grid-item">
                 <h2>Contact</h2>
                 <ul>
                     <li>Phone: +91 9576188048</li>
@@ -64,9 +160,177 @@
                     </ul>
                 </ul>
             </div>
-            <br>
-            <h6>@ All copy rights are reserved by InfoTech</h6>
+            <div class="map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d783650.4486104075!2d75.07740627812498!3d30.660839899999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39101a5dabbe37e9%3A0x29ae90fc945d6cbc!2sAGC%20Amritsar!5e1!3m2!1sen!2sin!4v1735284535192!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <h6 class="grid-item row-span">@ All copy rights are reserved by InfoTech</h6>
         </footer>
     </div>
+    <script>
+        // variable declaration
+        let flag=false;
+        let nav_buttons=document.querySelectorAll("#navcontent nav a");
+        let profile_content=document.getElementById("profile-content");
+        let profile_button=document.getElementById("profile-button");
+        let add_p_image= document.getElementsByClassName("add-p-image");
+        let profile_image_input=document.getElementById("profile-image-input");
+        let get_profile=document.getElementById("get-profile");
+        let overlay=document.getElementsByClassName("overlay")[0];
+        let closePopup_profile=document.getElementById('closePopup-profile');
+        let profile_image=document.getElementsByClassName('profile-image');
+        let save_changes= document.querySelector('#save-changes');
+        let popup_profile_form= document.querySelector('#popup-profile-form');
+        let message_box=document.querySelector('.message-box');
+        let isSave_message=document.querySelector('.isSave-message p');
+        let p_c_buttons=document.querySelectorAll('.p-c-buttons');
+        {% block declareVariables %}{% endblock declareVariables %}
+
+        nav_buttons.forEach( nav_button => {
+            nav_button.addEventListener('click',()=>{
+                let url=window.location.pathname;
+                let tabs=['home','d-app','contact','about' ];
+                let flag=null;
+                tabs.forEach( tab=>{
+                    if(url.includes(tab))
+                    // flag=tab;
+                    console.log(tab);
+                    else
+                    flag=null;
+                })
+                nav_buttons.forEach(btn =>{btn.classList.remove('activated')})
+                nav_button.classList.add('activated');
+            })
+        })
+        profile_button.addEventListener('click',()=>{
+            // if(window.getComputedStyle(profile_content))
+            if(!flag){
+                profile_content.style.display='inline-flex';
+                flag=true;
+            }else{
+                profile_content.style.display='none';
+                flag=false; 
+            }
+        })
+        document.addEventListener('click',(event)=>{
+            if(flag && !profile_content.contains(event.target) && event.target !== profile_button){
+                profile_content.style.display='none';
+                flag=false;
+                
+            }
+        })
+
+        profile_image_input.addEventListener('change',function(event){
+            const file=event.target.files[0];
+            const formData=new FormData();
+            formData.append('profile_image',file);
+
+            const xhr=new XMLHttpRequest();
+            xhr.open('POST',"{% url 'main:profile_upload' %}",true);
+            const csrf_token=getCSRFToken();
+            if(csrf_token){
+                xhr.setRequestHeader('X-CSRFToken',csrf_token);
+            }
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState==XMLHttpRequest.DONE){
+                    if(xhr.status==200){
+                        if(file){
+                            const reader=new FileReader();
+                            reader.onload=function(e){
+                                add_p_image[0].style.backgroundImage=`url(${e.target.result})`;
+                                profile_image[0].src=`${e.target.result}`;
+                                profile_image[1].src=`${e.target.result}`;
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                        console.log('image uploaded successfully. response text:- '+ xhr.responseText);
+                    }
+                    else{
+                        console.error('error',xhr.responseText);
+                    }
+                }
+            }
+            xhr.send(formData);
+        });
+
+        function getCSRFToken(){
+            const cookies=document.cookie.split(';');
+            for(const cookie of cookies){ 
+                const trimed=cookie.trim();
+                if(trimed.startsWith('csrftoken=')){
+                    return trimed.split('=')[1];
+                }
+            }
+        };
+        {% if user.is_authenticated %}
+        get_profile.addEventListener('click',()=>{
+            overlay.style.display="block";
+        })
+        {% if not isProfileComplete %}
+            let element= document.createElement('span');
+            element.classList.add('notify-Bubble');
+            get_profile.appendChild(element);
+            
+            message_box.style.display='block';
+
+        {% endif %}
+
+        {% endif %}
+        closePopup_profile.addEventListener('click',()=>{
+            overlay.style.display="none";
+        })
+
+        //adding event to save-changes button to save edits of profile pop up window
+        popup_profile_form.addEventListener('submit',async (e)=>{
+            e.preventDefault();
+            formData=new FormData(e.target);
+            try{
+                const response= await fetch("{% url 'main:save_profile_changes' %}",{
+                    method:'POST',
+                    headers:{ 'X-CSRFToken':getCSRFToken(),} ,                  
+                    body:formData,
+                });
+                if(response.ok){
+                    const data=response.json();
+                    message_box.style.display='none';
+                    let notify_Bubble=get_profile.querySelector('.notify-Bubble')
+                    if(notify_Bubble!=null)
+                        get_profile.removeChild(notify_Bubble);
+                    isSave_message.innerHTML=`<i class="fa-regular fa-circle-check" style="color: #03c200;"></i> Update successful`;
+                }
+                else{
+                    console.error(response.statusText);
+                    isSave_message.innerHTML=`<i class="fa-solid fa-triangle-exclamation" style="color: #f70202;"></i> Error occured, Try again`;
+                }
+            }
+            catch(error){
+                console.error("this is error",error);
+            };
+            
+        });
+
+        p_c_buttons.forEach( button=>{
+            button.addEventListener('click',(e)=>{
+                let rect = e.target.getBoundingClientRect();
+                let x=e.clientX-rect.left;
+                let y=e.clientY-rect.top;
+                let bubble=document.createElement('span');
+                bubble.style.setProperty('left', `${x}px`)
+                bubble.style.top=`${y}px`;
+                let preExist=button.querySelector('span');
+                if(preExist){
+                    preExist.remove()
+                }
+                button.appendChild(bubble);
+                setTimeout(()=>{
+                    let preExist=button.querySelector('span');
+                    preExist.remove()
+                },1000)
+                
+            })
+        })
+
+        {% block addJSCode %} {% endblock addJSCode %}
+        
+    </script>
 </body>
 </html>

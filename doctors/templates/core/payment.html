@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if payment %}
+    <form  action="{% url 'verify_payment' %}" id="paymentForm" method="POST">
+        <script
+            src="https://checkout.razorpay.com/v1/checkout.js"
+            data-key="rzp_test_Dvjd97CTfsOTF9"
+            data-amount="{{ payment.amount }}"  
+            data-currency="INR"
+            data-order_id="{{ payment.id }}"  
+            data-buttontext="Pay Now"
+            data-name="DoctorsHub"
+            data-description="Purchase Description"
+            data-image="{% url 'images/mainlogo.png' %}"
+            data-prefill.name="DoctorsHub"
+            data-prefill.email="slopdgh1234567@gmail.com"
+            data-theme.color="#F37254">
+        </script>
+    </form>
+    {% endif %}
+</body>
+</html>

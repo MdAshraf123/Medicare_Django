@@ -8,41 +8,147 @@
 {% block bodycontent %}
 <div class="body-container">
     <div class="search-container">
-        <div class="filter-buttons">
-            <button onclick="window.location.href='{% url 'filterView' 'Ped' %}'">Pediatrician(Child)</button>
-            <button onclick="window.location.href='{% url 'filterView' 'Car' %}'">Cardiologist</button>
-            <button onclick="window.location.href='{% url 'filterView' 'Der' %}'">Dermatologist</button>
-            <button onclick="window.location.href='{% url 'filterView' 'Gas' %}'">Gastroenterologist</button>
-            <button onclick="window.location.href='{% url 'filterView' 'Hem' %}'">Hematologist</button>
-            <button onclick="window.location.href='{% url 'filterView' 'ENT' %}'">ENT</button>
-            <button onclick="window.location.href='{% url 'filterView' 'Den' %}'">Dentist</button>
-        </div>
         <div id="search-bar">
             <form  action="{% url 'searching' %}" method="post">           
                 {% csrf_token %}
                 {{form.as_p}}
                 <input type="text" placeholder="Search with doctor name" name="userQuery" class="text-field">
-                <button type="submit" id="search" value="search"><i class="fa fa-search"></i></button>
+                <button type="submit" id="search" value="search" disabled><i class="fa fa-search"></i></button>
             </form>
-           
         </div>
+
+        <div class="filter-buttons">
+            <button onclick="window.location.href='{% url 'filterView' 'All' %}';">
+                All
+                <div class="tooltip">All</div>
+            </button>
+            <button onclick="window.location.href='{% url 'filterView' 'Ped' %}';">
+                Pediat...
+                <div class="tooltip">Pediatrician</div>
+            </button>
+            <button onclick="window.location.href='{% url 'filterView' 'Car' %}';">
+                Cardio...
+                <div class="tooltip">Cardiologist</div>
+            </button>
+            <button onclick="window.location.href='{% url 'filterView' 'Der' %}';">
+                Derma...
+                <div class="tooltip">Dermatologist</div>
+            </button>
+            <button onclick="window.location.href='{% url 'filterView' 'Gas' %}';">
+                Gastro...
+                <div class="tooltip">Gastroenterologist</div>
+            </button>
+            <button onclick="window.location.href='{% url 'filterView' 'Hem' %}';">
+                Hemato...
+                <div class="tooltip">Hematologist</div>
+            </button>
+            <button onclick="window.location.href='{% url 'filterView' 'ENT' %}';">
+                ENT
+                <div class="tooltip">ENT</div>
+            </button>
+            <button onclick="window.location.href='{% url 'filterView' 'Den' %}';">
+                Dentist
+                <div class="tooltip">Dentist</div>
+            </button>
+        </div>
+        
     </div>
-    <div class="content">
+    <div class="main-content-div">
         {% if data %}
         {% for i in data %}
-            <div class="items" onclick='window.location.href="{% url 'appointform' i.id %}"'>
-                <p>Dr. {{i.name}}</p>
-                <p>{{i.degree }}</p>
-                <p>{{i.speciality}}</p>
-                <p>{{i.hospital}}</p>
-                <p>{{i.address}}</p>
-                <p>{{i.p_count}}</p>
+        <div class="container">
+            <div class="content">
+                
+                <div class="img-container"><img src="" alt=""></div>
+                <div class="rating-front">
+                    <div class="D-name">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td colspan="2"><h2>Dr {{i.name}} </h2></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width:170px;">
+                                    <h4>{{i.speciality}}</h4>
+                                </td>
+                                <td>
+                                    <div class="stars">
+                                        <svg class="star" data-value="1" viewBox="0 0 24 24">
+                                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                        </svg>
+                                        <svg class="star" data-value="2" viewBox="0 0 24 24">
+                                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                        </svg>
+                                        <svg class="star" data-value="3" viewBox="0 0 24 24">
+                                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                        </svg>
+                                        <svg class="star" data-value="4" viewBox="0 0 24 24">
+                                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                        </svg>
+                                        <svg class="star" data-value="5" viewBox="0 0 24 24">
+                                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                        </svg>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><p class="font-weight-100">{{i.hospital}},</p></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" >
+                                   <p class="font-weight-100">{{i.address}}</p> 
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>   
+                    </div>
+                    
+                    <table class="data-table">
+                    <tr>
+                        <td><h4>Experience</h4></td>
+                        <td> <h4>Patients</h4> </td>
+                    </tr>
+                    <tr>
+                        <td ><p class="font-weight-100">5 years</p></td>
+                        <td ><p class="font-weight-100">1000+</p></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><h4>About</h4></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" >
+                            <p class="  paragraph-area font-weight-100">
+                                Dr Henry is a Dermatolgist with a experience of a 5.6 years.
+                                 And has been working in Amey hospital from 4 years.
+                                 And has been working in Amey hospital from 4 years.
+                                
+                            </p>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><button  class="FlipButton d-profile-buttons"> View location</button></td>
+                        <td> <a class="d-profile-buttons" href="{% url 'appointform' i.id %}">Book now</a></td>
+                    </tr>
+    
+    
+                </table>
+                </div>
+                <div class="location-back">
+                    <div class="reFlipbutton-div"><button class="reFlipbutton-button"><img src="{% static 'images/arrow.png' %}" alt="back" ></button></div>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d783650.4486104075!2d75.07740627812498!3d30.660839899999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39101a5dabbe37e9%3A0x29ae90fc945d6cbc!2sAGC%20Amritsar!5e1!3m2!1sen!2sin!4v1735284535192!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                </div>
+                
             </div>
+    
+        </div>
         {% endfor %}
         {% else %}
             <p>Data not found</p>
-        {% endif %}
-           
+        {% endif %}       
     </div>
 </div>
 <!-- <script>
@@ -77,9 +183,39 @@
             }
         )
 
-
+document.addEventListener('DOMContentLoad' , ()=>{
 
     })
 </script> -->
 
+
 {% endblock bodycontent %}
+{% block declareVariables %}
+    let view_location=document.querySelectorAll(".FlipButton");
+    let reFlipbutton_button= document.querySelectorAll(".reFlipbutton-button");
+    let content=document.querySelectorAll('.content');
+    let text_field=document.querySelector('.text-field');
+    let search_button=document.querySelector('#search');
+{% endblock declareVariables %}
+{% block addJSCode %}
+    view_location.forEach((button, index) =>{
+        button.addEventListener('click',()=>{
+            console.log('event executed');
+            content[index].style.transform='rotateY(180deg)';
+            content[index].style.padding='7px 7px 7px 7px';
+
+        })
+    })
+
+    reFlipbutton_button.forEach( (r_button , index)=>{
+        r_button.addEventListener('click', ()=>{
+            content[index].style.transform='';
+            content[index].style.padding='60px 20px 20px 20px';
+        })
+    } )
+
+    text_field.addEventListener('input',(e)=>{
+        search_button.disabled= text_field.value.trim()==='';
+    })
+
+{% endblock addJSCode %}

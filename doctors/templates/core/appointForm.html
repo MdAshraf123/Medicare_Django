@@ -5,43 +5,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'images/mainlogo.png' %}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Delius&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Spectral:ital@1&display=swap"
+        rel="stylesheet">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <title>Document</title>
     <style>
+        *{
+            font-family: nunito;
+            font-weight: 600;
+            box-sizing: border-box;
+        }
         body{
             display:flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            background-color: #c6b8c6;
         }
         .form{
             display: flex;
             flex-direction: column;
             align-items: center;
-           
-            width:30vw;
+            width:35em;
             padding:10px;
             border-radius: 10px;
-            border:solid 0.5 brown;
-            background-color:rgb(255, 215, 204) ;
+            background-color: #D9AFD9;
+            background-image: linear-gradient(0deg, #d9afd9 0%, #97D9E1 100%);
+ ;
         }
         h1{text-align: center;}
-        .form form input{
-            margin:10px 10px;
-            width:20vw;
-            height:25px;
-            padding:2px;
+        .container{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 0fr;
+            width: 100%;
+            gap: 10px;
         }
+        .cancel-button{
+            text-align: left; 
+            height: 70px;
+        }
+        .cancel-button button{
+            cursor: pointer;
+            background-color: #0015ff;
+            width: 6em;
+            height:2.35em;
+            border:1px solid rgba(0, 0, 0, 0.461);
+            border-radius: 3px;
+            color: white;
+            font-weight: 400;
+        }
+        .submit-button{
+            text-align: right;
+            padding-right: 8px;
+            height: 70px;
+        }
+        .submit-button button{
+            cursor: pointer;
+            background-color: #0015ff;
+            width: 6em;
+            height:2.35em;
+            border:1px solid rgba(0, 0, 0, 0.461);
+            border-radius: 3px;
+            color: white;
+            font-weight: 400;
+        }
+        .item{
+            width: 15em;
+            text-align: left;
+
+            
+        }
+
+        .p-sex {
+            display: flex;
+            justify-content: space-evenly;
+            height: 30px;
+        }
+        .p-sex div{
+            width: 85px;
+        }
+        .p-sex div label input[name="P_sex"]{
+            width: 15px;
+            height:15px ;
+            display: inline;
+            margin: 5px 0;
+            
+        }
+        .p-sex div label {
+            padding: 3px 0;
+            line-height:28px ;
+            
+        }
+        .form form input{
+            margin:0px;
+            width: 14em;
+            height: 2em;
+            font-size: 1.04em ;
+            padding: 0 4px;
+            outline-color: #d9afd9;
+        }
+       
     </style>
+    <script>
+        // Function to create Razorpay order
+        function createOrder(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            fetch("{% url 'create_order' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: JSON.stringify({
+                    // You can add the required form data here for price calculation if needed
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.order_id) {
+                    var options = {
+                        key: "rzp_test_Dvjd97CTfsOTF9", // Your Razorpay key ID
+                        amount: 10000, // This should match the amount from the backend (in paise)
+                        currency: "INR",
+                        name: "Doctor Appointment",
+                        description: "Book Appointment Payment",
+                        order_id: data.order_id,
+                        handler: function (response) {
+                            // Call your backend to verify the payment success
+                            verifyPayment(response);
+                        },
+                        prefill: {
+                            name: document.getElementById("id_P_name").value, // Patient Name from form
+                            email: "", // Optional
+                            contact: "", // Optional
+                        },
+                        theme: {
+                            color: "#3399cc"
+                        }
+                    };
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open(); // Open Razorpay modal
+                } else {
+                    alert("Error creating Razorpay order.");
+                }
+            })
+            .catch(error => console.error("Error creating Razorpay order:", error));
+        }
+
+        // Function to verify the payment on backend
+        function verifyPayment(paymentResponse) {
+            fetch("{% url 'verify_payment' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: JSON.stringify(paymentResponse)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Payment Successful!");
+                    window.location.href='doctors/';
+                    // Redirect or show confirmation
+                } else {
+                    alert("Payment Verification Failed.");
+                }
+            })
+            .catch(error => console.error("Error verifying payment:", error));
+        }
+    </script>
 </head>
 <!-- /d_app/5/appointform/ -->
 <body>
-    
+     
     <div class="form">
-    <h1>Appointment Form</h1>
-    <form action="{% url 'appointform' id %}" method="post">
-        {{form.as_p}}
+        <h1>Book Appointment</h1>
+        <form onsubmit="createOrder(event)" > <!--action="{% url 'appointform' id %}" method="post" -->
+            <div class="container">
+                <div class="item">
+                    <div><span>Patient name </span></div>
+                    {{ form.P_name }}
+                    
+                </div>
+                <div class="item">
+                    <div class="right-label"><span>Age</span></div>                    
+                    {{ form.P_age }} 
+                   
+                </div>
+                <div class="item">     
+                    <div><span>State</span></div>
+                    <!-- {{ form.state.label_tag }} -->                       
+                        {{ form.state }}
+                </div>
+                <div class="item">
+                    <div class="right-label"><span>District</span></div>
+                    <!-- {{ form.dist.label_tag }} -->
+                        {{ form.dist }}
+                </div>
+                <div class="item">
+                    <div><span>Appointment date</span></div>
+                    <!-- {{ form.appoint_date.label_tag }} --> 
+                        {{ form.appoint_date }}
+                </div>
+                <div class="item">
+                    <div class="right-label"><span>Sex</span></div>    
+                        {{ form.P_sex }}
+                </div>
+                <div class="item">
+                    <div class="cancel-button">
+                        <button type="button">Cancel</button>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="submit-button">
+                        <button type="submit" name="Book" >Book</button>
+                    </div>
+                </div>
+            </div>
         {% csrf_token %}
-        <input type="submit" name="Book">
+        
     </form>
 </div>
 </body>

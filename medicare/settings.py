@@ -26,10 +26,13 @@ STATIC_DIR=os.path.join(BASE_DIR,'static')
 SECRET_KEY = 'django-insecure-pu8djwjlz%pq_fs$*olhy-+_!xc6fte1lmx0uik@_)!q_9i1n9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["*"]
+#RazorPay Credencials
+RAZORPAY_KEY_ID="rzp_test_Dvjd97CTfsOTF9"
+RAZORPAY_KEY_SECRETE="RDdcQn7QFQWUvbnz07BWyddh"
 
 # Application definition
 
@@ -46,12 +49,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'medicare.urls'
@@ -67,6 +72,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.base_context',
+                'main.context_processors.profileCompData',
             ],
         },
     },
@@ -104,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTH_USER_MODEL = 'your_app_name.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -129,3 +137,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL='main:home'
 LOGOUT_REDIRECT_URL='main:login'
 LOGIN_URL='/login/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
