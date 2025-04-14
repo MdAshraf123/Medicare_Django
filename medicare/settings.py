@@ -31,11 +31,11 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["https://web-production-0005.up.railway.app"]
 #RazorPay Credencials
 RAZORPAY_KEY_ID="rzp_test_Dvjd97CTfsOTF9"
 RAZORPAY_KEY_SECRETE="RDdcQn7QFQWUvbnz07BWyddh"
-
+CSRF_TRUSTED_ORIGINS=["https://web-production-0005.up.railway.app"]
 # Application definition
 
 INSTALLED_APPS = [
