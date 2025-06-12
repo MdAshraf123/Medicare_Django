@@ -1,4 +1,4 @@
-from main.models import UserProfileImages,CustomUser
+from main.models import UserProfileImages,Patients
 from django.templatetags.static import static
 from django.contrib.auth.models import AnonymousUser
 
@@ -25,7 +25,7 @@ def base_context(request):
 def profileCompData(request):
     try:
         if request.user.is_authenticated:
-            customUser=CustomUser.objects.get(user=request.user)
+            customUser=Patients.objects.get(patient=request.user)
             print(customUser)
             context1={
                 'isProfileComplete':customUser.isProfileComplete(),
@@ -36,7 +36,7 @@ def profileCompData(request):
                 'isProfileComplete':None,
                 'profileRemainigData':{'phone':None, 'location':None,},
             }
-    except CustomUser.DoesNotExist:
+    except Patients.DoesNotExist:
         context1={
             'isProfileComplete':False,
             'profileRemainigData':{'phone':None, 'location':None,},

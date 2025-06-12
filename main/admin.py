@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from main.models import Topdoc,CustomUser
+from main.models import Topdoc,Patients
 from main.models import UserProfileImages
-# from your_app_name.models import CustomUser
+# from your_app_name.models import Patients
 
 # from doctors.models import Doctor
 
@@ -16,8 +16,8 @@ admin.site.register(Topdoc,TopdocAdmin)
 
 
 
-@admin.register(CustomUser) # used in small and concise use
-class CustomUserAdmin(admin.ModelAdmin):
+@admin.register(Patients) # used in small and concise use
+class PatientsAdmin(admin.ModelAdmin):
    list_display=['phone_number','location']
 
 

@@ -17,8 +17,8 @@ class Topdoc(models.Model):
         return f'{self.did},{self.dname}'
     
 
-class CustomUser(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE, related_name='address')
+class Patients(models.Model):
+    patient=models.OneToOneField(User,on_delete=models.CASCADE, related_name='patients')
     phone_number =models.CharField(max_length=15,
                                    validators=[RegexValidator(r'^\d{10}$', 'Enter a valid 10-digit phone number')],
                                     null=False, blank=True) 
@@ -26,7 +26,7 @@ class CustomUser(models.Model):
     location=models.CharField(max_length=50, null=False, blank=True)
 
     def isProfileComplete(self):
-        return bool(self.user and self.phone_number and self.location)
+        return bool(self.patient and self.phone_number and self.location)
     
 
     def __str__(self):
@@ -35,8 +35,8 @@ class CustomUser(models.Model):
     
 
 class UserProfileImages(models.Model):
-    user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile_image')
-    u_p_image=models.URLField(default='no image')
+    user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='patientsImgs')
+    u_p_image=models.URLField(default='NotUploaded')
 
     def __str__(self):
         return f'{self.u_p_image}'

@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from main.models import Topdoc
-from main.models import UserProfileImages,CustomUser
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from main.models import UserProfileImages,Patients
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from .form import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.templatetags.static import static
+from utils.decorators import doctor_required
 from decouple import config
 import base64
 import requests
@@ -59,9 +60,8 @@ def homepage(request ):
 
 @login_required
 def bookedAppointment(request):
-    obj=Appointment.objects.filter(userid=request.user.id)
+    obj=Appointment.objects.filter(patient=request.user)
     # obj2=Appointment.Doctor.objects.filter(id=obj.d_id)
-    user = request.user  # Get the currently logged-in user
     context = {
         'appointData':obj,    
     }
@@ -86,10 +86,10 @@ def saveProfileChages(request):
         email=request.POST.get('email')
         phone=request.POST.get('phone')
         loc=request.POST.get('location')
-        customUser, is_created =CustomUser.objects.get_or_create(user=user1)
-        customUser.phone_number =phone
-        customUser.location=loc
-        customUser.save()
+        patientUser, is_created =Patients.objects.get_or_create(user=user1)
+        patientUser.phone_number =phone
+        patientUser.location=loc
+        patientUser.save()
 
         if not email.endswith('@gmail.com'):
             return JsonResponse({'error':'invalid error domail'}, status=400)
@@ -107,26 +107,6 @@ def contactpage(request):
 
 def aboutpage(request):
     return render(request,'core/about.html')
-
-# def login(request):
-#     fm=loginFor(request.POST)
-#     return render(request,'login/loging.html',{'form':fm})
-
-# def Authorize(request):
-#     fm=loginFor(request.POST)
-
-#     if fm.is_valid():
-#         # return HttpResponseRedirect('/home/')
-#         user=fm.cleaned_data['user']
-#         password=fm.cleaned_data['password']
-#         if  User.objects.filter(Uname=user).exists() and User.objects.filter(Upassword=password).exists():
-#             return HttpResponseRedirect(f'/home/?name={user}')
-#         else:
-#             return HttpResponse('false credentials ')
-#     else:
-#         return HttpResponse('form is not valid')
-
-    
 
 
 def updateUpload(request,profile_image):
@@ -182,7 +162,7 @@ def updateUpload(request,profile_image):
     else:
         print(f"Failed to upload image: {response.status_code}")
 
-
+@login_required
 @require_http_methods('POST')       
 def cancelAppoint(request):
     if request.method=='POST':
@@ -212,10 +192,12 @@ def cancelAppoint(request):
         },status=400
     )
 
-
+@login_required
+@doctor_required
 def doctor_dashboard(request):
     return render(request, 'doctors/doctor_dashboard.html')
 
-
+@login_required
+@doctor_required
 def doc_profile(request):
     return render(request, 'doctors/doctorprofile.html')

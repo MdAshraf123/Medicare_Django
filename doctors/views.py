@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse,JsonResponse
 from .forms import myform,Appointmentform
-from .models import Doctor,Appointment
+from .models import Doctors,Appointment
 from django.contrib.auth.models import User
 import json
 from razorpay import Client  # Make sure you imported this
@@ -11,7 +11,7 @@ from django.conf import settings
 
 # Create your views here.
 def dmainpage(request):
-    doctors = Doctor.objects.all()
+    doctors = Doctors.objects.all()
     return render(request,'core/dhome.html',context={'data':doctors})
 
 def response(request,speciality):
@@ -26,9 +26,9 @@ def response(request,speciality):
         'Den':'Dentist',
     }
     if D[speciality]=='*':
-        doctors=Doctor.objects.all()
+        doctors=Doctors.objects.all()
     else:
-        doctors = Doctor.objects.filter(speciality=D[speciality])
+        doctors = Doctors.objects.filter(speciality=D[speciality])
     return render(request,'core/dhome.html',{'data':doctors})
 
 def searchBar(request):
@@ -40,7 +40,7 @@ def searchBar(request):
             doctors=None
             valu=form1.cleaned_data['userQuery']
             if valu!='':
-                doctors = Doctor.objects.filter(name__startswith =valu)
+                doctors = Doctors.objects.filter(name__startswith =valu)
             else:
                 doctors=None
     else:
@@ -105,8 +105,8 @@ def verify_payment(request):
 
             if appointmentForm.is_valid():
                 obj=appointmentForm.save(commit=False)
-                obj.userid=request.user
-                obj.d_id= Doctor.objects.get(id= appoint_data.get('d_id'))
+                obj.patient=request.user
+                obj.doctor= Doctors.objects.get(id= appoint_data.get('doctor')).doctor
                 obj.save()
             return JsonResponse({'success': True})
         except Exception as e:

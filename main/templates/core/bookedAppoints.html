@@ -40,7 +40,7 @@
                 <table>
                 <tbody class="basic-detail">
                     <tr>
-                        <td colspan="2"><strong>Dr. {{i.d_id.name}}</strong> <button class="expand-btn"><img
+                        <td colspan="2"><strong>Dr. {{i.doctor.doctors.name}}</strong> <button class="expand-btn"><img
                                     src="{% static '/images/down.png' %}" alt="show"></button></td>
                     </tr>
                     <tr>
@@ -49,11 +49,11 @@
                     </tr>
                     <tr>
                         <td>Doctor's degree:</td>
-                        <td>{{i.d_id.degree}}</td>
+                        <td>{{i.doctor.doctors.degree}}</td>
                     </tr>
                     <tr>
                         <td>Specialist:</td>
-                        <td>{{i.d_id.speciality}}</td>
+                        <td>{{i.doctor.doctors.speciality}}</td>
                     </tr>
                     <tr>
                         <td><strong>Patient name: </strong></td>
@@ -79,11 +79,11 @@
                     </tr>
                     <tr>
                         <td>Hospital:</td>
-                        <td>{{i.d_id.hospital}}</td>
+                        <td>{{i.doctor.doctors.hospital}}</td>
                     </tr>
                     <tr>
                         <td>Address:</td>
-                        <td>{{i.d_id.address}}</td>
+                        <td>{{i.doctor.doctors.address}}</td>
                     </tr>
                     <tr>
                         <td colspan="2"><button class="cancel-appoint" data-appointid="{{ i.id }}">Cancel</button></td>
