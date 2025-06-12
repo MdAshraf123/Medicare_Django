@@ -30,8 +30,8 @@ SECRET_KEY = 'django-insecure-pu8djwjlz%pq_fs$*olhy-+_!xc6fte1lmx0uik@_)!q_9i1n9
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-ALLOWED_HOSTS = ["https://web-production-0005.up.railway.app"]
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["https://web-production-0005.up.railway.app"]
 #RazorPay Credencials
 RAZORPAY_KEY_ID="rzp_test_Dvjd97CTfsOTF9"
 RAZORPAY_KEY_SECRETE="RDdcQn7QFQWUvbnz07BWyddh"

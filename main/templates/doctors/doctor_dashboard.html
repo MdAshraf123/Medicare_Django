@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Delius&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Spectral:ital@1&display=swap"
+        rel="stylesheet">
+    <title>Doctor Dashboard</title>
+    <link rel="icon" href="{% static 'images/mainlogo.png' %}">
+    <link rel="stylesheet" href="{% static 'doctorsCss/doctor_dashboard.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div id="logo-container">
+                <div id="logo" >
+                    <img src="{% static 'images/mainlogo.png' %}">
+                </div><span> DoctorsHub</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="{% url 'main:profile' %}">Profile</a></li>
+                    <li><a href="#">Patients</a></li>
+                    <li><a href="#">Messages</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Welcome, Dr. Ashraf</h1>
+                <p>Specialist: Cardiologist</p>
+            </header>
+
+            <section class="appointments-section">
+                <h2>Today's Appointments</h2>
+                <table class="appointments-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10:00 AM</td>
+                            <td>John Doe</td>
+                            <td>32</td>
+                            <td>Male</td>
+                            <td>9876543210</td>
+                        </tr>
+                        <tr>
+                            <td>11:30 AM</td>
+                            <td>Jane Smith</td>
+                            <td>28</td>
+                            <td>Female</td>
+                            <td>9123456789</td>
+                        </tr>
+                        <!-- More rows as needed -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

@@ -55,7 +55,7 @@ class myform(forms.Form):
 class Appointmentform(forms.ModelForm):
     class Meta:
         model = Appointment
-        fields = ['P_name', 'P_age', 'P_sex', 'state', 'dist', 'appoint_date']
+        fields = ['P_name', 'P_age', 'P_sex', 'state', 'dist', 'appoint_date',]
         widgets = {
             'P_name': forms.TextInput(attrs={
                 'placeholder': 'Enter your name',
@@ -80,6 +80,7 @@ class Appointmentform(forms.ModelForm):
                 'class': 'form-control',
                 'type':'date',
             }),
+            
         }
 
     def __init__(self, *args, **kwargs):

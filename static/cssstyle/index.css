@@ -201,7 +201,8 @@ footer div ul{
     background-color: rgb(25, 25, 25);
 
 }
-.p-c-buttons span{
+
+.p-c-buttons .click-bubble{
     position:absolute ;
     pointer-events: none;
     width:0px;
@@ -224,7 +225,7 @@ footer div ul{
     }
 }
 
-.notify-Bubble{
+span[class=notify-Bubble]{
     display: inline-block;
     width: 10px;
     height: 10px;

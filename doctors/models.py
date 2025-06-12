@@ -1,8 +1,10 @@
 from django.db import models
 from django.core.validators import MaxValueValidator,MinValueValidator
-
+from django.contrib.auth.models import User
 # Create your models here.
-class Doctor(models.Model):
+class Doctor(models.Model): 
+    duser=models.CharField(max_length=10, default='1234')
+    dpass=models.CharField(max_length=15, default='123456')
     doctor_face=models.URLField(default='Empty')
     name=models.CharField(max_length=20)
     degree=models.CharField(max_length=15)
@@ -14,7 +16,7 @@ class Doctor(models.Model):
     p_count=models.IntegerField(default=0)
     experience=models.IntegerField(validators=[MaxValueValidator(80), MinValueValidator(0)], default=0)
     rating=models.FloatField(validators=[MaxValueValidator(5),MinValueValidator(0)],default=0)
-    raters_number=models.IntegerField(default=0)
+    raters_number=models.IntegerField(default=0)#should be deleted
     
 
     def __str__(self):
@@ -24,7 +26,7 @@ class Doctor(models.Model):
 class DoctorLeave(models.Manager):
     L_id=models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True)
     date=models.DateTimeField(default='Empty')
-    duration=models.IntegerField(validators=[MaxValueValidator(15),MinValueValidator(0)])
+    duration=models.IntegerField(validators=[MaxValueValidator(15),MinValueValidator(1)])
     is_completed=models.BooleanField(default=False)
 
     
@@ -35,16 +37,18 @@ class Appointment(models.Model):
         OTHER='O','Other'
 
    
-    userid=models.IntegerField(null=True)
-    d_id=models.ForeignKey(Doctor, on_delete=models.CASCADE,null=True)
+    userid=models.ForeignKey(User, on_delete=models.CASCADE)
+    d_id=models.ForeignKey(Doctor, on_delete=models.CASCADE)
     P_name=models.CharField(max_length=30)
     P_age=models.IntegerField(default=0)
     P_sex=models.CharField(max_length=2, choices=Gender.choices , default=Gender.MALE)
+    P_contact=models.CharField(max_length=10, default='1234567890')
     state=models.CharField(max_length=25)
     dist=models.CharField(max_length=25)
     appoint_date=models.DateField()
-    appoint_time=models.TimeField(blank=True)
+    appoint_time=models.TimeField(null=True, blank=True)
     is_complete=models.BooleanField(default=False)
+    rateus= models.FloatField(default=0)#should add here a rating field
     
     
     def __str__(self):

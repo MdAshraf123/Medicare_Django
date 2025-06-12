@@ -25,12 +25,12 @@
         <div id="logo-container">
             <div id="logo" >
                 <img src="{% static 'images/mainlogo.png' %}">
-            </div><span> DoctorsHub</span></div>
+            </div><span> DoctorsHub</span>
+        </div>
         <div id="navcontent">
             <nav>
                 <a href="{% url 'main:home' %}?id=1" class="activated">Home</a>
                 <a href="{% url 'doctors' %}">Doctors</a>
-                <a href="{% url 'main:hospitals' %}">Hospitals</a>
                 <a href="{% url 'main:contact' %}">Contact</a>
                 <a href="{% url 'main:about' %}">About</a> 
                 <!-- <a href="{% url 'main:logout' %}">Logout</a> 
@@ -63,7 +63,7 @@
                     {% endif %}
                     {% if user.is_authenticated %}
                      <a class="p-c-buttons" id="get-profile" >Profile </a> <!--<span class="notify-Bubble"></span>-->
-                     <button class="p-c-buttons">Appointments</button>
+                     <a class="p-c-buttons" href="{% url 'main:appointments' %}">Appointments</a>
                      <button class="p-c-buttons">History</button>
                       <form action="{% url 'main:logout' %}" method="post" style="display: inline;">
                           {% csrf_token %}
@@ -265,13 +265,13 @@
         get_profile.addEventListener('click',()=>{
             overlay.style.display="block";
         })
-        {% if not isProfileComplete %}
+        {% if not request.user.address.isProfileComplete %}
             let element= document.createElement('span');
             element.classList.add('notify-Bubble');
             get_profile.appendChild(element);
             
             message_box.style.display='block';
-
+            console.log(get_profile);
         {% endif %}
 
         {% endif %}
@@ -295,11 +295,14 @@
                     let notify_Bubble=get_profile.querySelector('.notify-Bubble')
                     if(notify_Bubble!=null)
                         get_profile.removeChild(notify_Bubble);
-                    isSave_message.innerHTML=`<i class="fa-regular fa-circle-check" style="color: #03c200;"></i> Update successful`;
+                        isSave_message.innerHTML=`<i class="fa-regular fa-circle-check" style="color: #03c200;"></i> Update successful`;
+                    setTimeout(()=>{isSave_message.innerHTML="";},3000);
+                    
                 }
                 else{
                     console.error(response.statusText);
                     isSave_message.innerHTML=`<i class="fa-solid fa-triangle-exclamation" style="color: #f70202;"></i> Error occured, Try again`;
+                    setTimeout(()=>{isSave_message.innerHTML="";},3000);
                 }
             }
             catch(error){
@@ -314,15 +317,16 @@
                 let x=e.clientX-rect.left;
                 let y=e.clientY-rect.top;
                 let bubble=document.createElement('span');
-                bubble.style.setProperty('left', `${x}px`)
+                bubble.classList.add('click-bubble');
+                bubble.style.setProperty('left', `${x}px`);
                 bubble.style.top=`${y}px`;
-                let preExist=button.querySelector('span');
+                let preExist=button.querySelector('span[class=click-bubble]');
                 if(preExist){
                     preExist.remove()
                 }
                 button.appendChild(bubble);
                 setTimeout(()=>{
-                    let preExist=button.querySelector('span');
+                    let preExist=button.querySelector('span[class=click-bubble]');
                     preExist.remove()
                 },1000)
                 

@@ -110,76 +110,7 @@
         }
        
     </style>
-    <script>
-        // Function to create Razorpay order
-        function createOrder(event) {
-            event.preventDefault(); // Prevent form submission
-            
-            fetch("{% url 'create_order' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                },
-                body: JSON.stringify({
-                    // You can add the required form data here for price calculation if needed
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.order_id) {
-                    var options = {
-                        key: "rzp_test_Dvjd97CTfsOTF9", // Your Razorpay key ID
-                        amount: 10000, // This should match the amount from the backend (in paise)
-                        currency: "INR",
-                        name: "Doctor Appointment",
-                        description: "Book Appointment Payment",
-                        order_id: data.order_id,
-                        handler: function (response) {
-                            // Call your backend to verify the payment success
-                            verifyPayment(response);
-                        },
-                        prefill: {
-                            name: document.getElementById("id_P_name").value, // Patient Name from form
-                            email: "", // Optional
-                            contact: "", // Optional
-                        },
-                        theme: {
-                            color: "#3399cc"
-                        }
-                    };
-                    var rzp1 = new Razorpay(options);
-                    rzp1.open(); // Open Razorpay modal
-                } else {
-                    alert("Error creating Razorpay order.");
-                }
-            })
-            .catch(error => console.error("Error creating Razorpay order:", error));
-        }
-
-        // Function to verify the payment on backend
-        function verifyPayment(paymentResponse) {
-            fetch("{% url 'verify_payment' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                },
-                body: JSON.stringify(paymentResponse)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Payment Successful!");
-                    window.location.href='doctors/';
-                    // Redirect or show confirmation
-                } else {
-                    alert("Payment Verification Failed.");
-                }
-            })
-            .catch(error => console.error("Error verifying payment:", error));
-        }
-    </script>
+    
 </head>
 <!-- /d_app/5/appointform/ -->
 <body>
@@ -228,9 +159,91 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" value="{{ id }}" name="d_id">
         {% csrf_token %}
         
     </form>
 </div>
+<script>
+    // // Function to create Razorpay order
+    function createOrder(event) {
+        event.preventDefault(); // Prevent form submission
+        fetch("{% url 'create_order' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            },
+            body: JSON.stringify({}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.order_id) {
+                let form=document.forms[0];
+                let formObject=new FormData(form);
+                let formData=Object.fromEntries(formObject.entries())
+            
+                var options = {
+                    key: "rzp_test_Dvjd97CTfsOTF9", // Your Razorpay key ID
+                    amount: 10000, // This should match the amount from the backend (in paise)
+                    currency: "INR",
+                    name: "Doctor Appointment",
+                    description: "Book Appointment Payment",
+                    order_id: data.order_id,
+                    handler: function (response) {
+                        // Call your backend to verify the payment success
+                        
+                        verifyPayment(response, formData);
+                        
+                    },
+                    prefill: {
+                        name: document.getElementById("id_P_name").value, // Patient Name from form
+                        email: "", // Optional
+                        contact: "", // Optional
+                    },
+                    theme: {
+                        color: "#3399cc"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open(); // Open Razorpay modal
+            } else {
+                alert("Error creating Razorpay order.");
+            }
+        })
+        .catch(error => console.error("Error creating Razorpay order:", error));
+    }
+
+    // Function to verify the payment on backend
+    function verifyPayment(paymentResponse, formData) {
+        fetch("{% url 'verify_payment' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            },
+            body: JSON.stringify({
+                "paymentResponse":paymentResponse,
+                "formData":formData,
+                
+            }
+            )
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.success) {
+                alert("Payment Successful!");
+                window.location.href="{% url 'doctors' %}";
+                // Redirect or show confirmation
+            } else {
+                alert("Payment Verification Failed.");
+            }
+        })
+        .catch(error => console.error("Error verifying payment:", error));
+    }
+
+
+</script>
 </body>
 </html>

@@ -16,7 +16,7 @@ from django.templatetags.static import static
 from decouple import config
 import base64
 import requests
-
+import json
 
 
 # Create your views here.
@@ -58,28 +58,20 @@ def homepage(request ):
     return render(request,f'core/home.html',{'TopD':TopD,})
 
 @login_required
-def profile(request):
+def bookedAppointment(request):
     obj=Appointment.objects.filter(userid=request.user.id)
     # obj2=Appointment.Doctor.objects.filter(id=obj.d_id)
     user = request.user  # Get the currently logged-in user
     context = {
-        'first_name':user.first_name,
-        'last_name':user.last_name,
-        'userid': user.id,
-        'username': user.username,
-        'password': '********' , # Display password in dotted format
-        'gmail':user.email,
-        'appointData':obj,
-        
+        'appointData':obj,    
     }
-    return render(request,'core/profile.html',context)
+    return render(request,'core/bookedAppoints.html',context)
 
 @login_required
 @require_http_methods(["POST"])
 def profileImageUpload(request):
     if request.method == 'POST' and request.FILES.get('profile_image'):
         profile_image = request.FILES['profile_image']
-        print("++++File name: "+request.FILES['profile_image'])
         updateUpload(request,profile_image)
         return JsonResponse({'message': 'Profile image uploaded successfully!'}, status=200)
     return JsonResponse({'error': 'Invalid request'}, status=400)
@@ -105,7 +97,6 @@ def saveProfileChages(request):
         user1.first_name=first_name
         user1.last_name=last_name
         user1.save()
-
         return JsonResponse({'successful':'data sent successfully'},status=200)
     return JsonResponse({'error':'invalid request method'}, status=400)
 
@@ -115,7 +106,6 @@ def contactpage(request):
 
 
 def aboutpage(request):
-
     return render(request,'core/about.html')
 
 # def login(request):
@@ -138,12 +128,8 @@ def aboutpage(request):
 
     
 
-def hospitalpage(request):
-    return HttpResponse('<h1>this is hospital page</h1>')
-
 
 def updateUpload(request,profile_image):
-
     my_token = config("GITHUB_TOKEN")
   # Replace with your GitHub personal access token
     REPO_NAME = "MdAshraf123/media_cdn"  # Repository name (e.g., owner/repo)
@@ -195,6 +181,41 @@ def updateUpload(request,profile_image):
         print(f"Image '{IMAGE_NAME}' updated successfully in {FOLDER_PATH}!")
     else:
         print(f"Failed to upload image: {response.status_code}")
-        
-   
 
+
+@require_http_methods('POST')       
+def cancelAppoint(request):
+    if request.method=='POST':
+        try:
+            data=json.loads(request.body)
+            user=data.get('userid')
+            appointId=data.get('appointmentId')
+            obj=Appointment.objects.get(id=appointId)
+            obj.delete()
+            return JsonResponse({
+                'status':'success',
+                'message':f'Deleted Successfully\nAppointment id- {appointId}'
+            },status=200)
+        except Appointment.DoesNotExist:
+            return JsonResponse({
+                'status':'error',
+                'message':'Appointment not found',
+            },status=404)
+        except Exception as e:
+            return JsonResponse({
+                "status":"error",
+                "message": e,
+            })
+    return JsonResponse(
+        {
+            'status':'Bad request',
+        },status=400
+    )
+
+
+def doctor_dashboard(request):
+    return render(request, 'doctors/doctor_dashboard.html')
+
+
+def doc_profile(request):
+    return render(request, 'doctors/doctorprofile.html')

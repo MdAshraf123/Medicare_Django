@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="{% static 'images/mainlogo.png' %}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Delius&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Spectral:ital@1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <!-- <script src="https://kit.fontawesome.com/4fe02a54d3.js" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="{% static 'cssstyle/bookedAppoints.css' %}">
+    <title>Document</title>
+</head>
+
+<body>
+    <!--##########    Navigation Bar   ############-->
+    <div id="navbar">
+        <div id="logo-container">
+            <div id="logo">
+                <img src="{% static 'images/mainlogo.png' %}">
+            </div>
+            <span> DoctorsHub</span>
+        </div>
+    </div>
+
+    <button class="back-btn" type="button" onclick="window.location.href= '{% url 'main:home' %}'"><i
+            class="fa-solid fa-arrow-left"></i></button>
+    <div class="body">
+        <br>
+
+
+        <div class="container">
+            {% if appointData %}
+            {% for i in appointData %}
+            <div class="appoints">
+                <table>
+                <tbody class="basic-detail">
+                    <tr>
+                        <td colspan="2"><strong>Dr. {{i.d_id.name}}</strong> <button class="expand-btn"><img
+                                    src="{% static '/images/down.png' %}" alt="show"></button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Appointment Date: </strong></td>
+                        <td>{{i.appoint_date}}</td>
+                    </tr>
+                    <tr>
+                        <td>Doctor's degree:</td>
+                        <td>{{i.d_id.degree}}</td>
+                    </tr>
+                    <tr>
+                        <td>Specialist:</td>
+                        <td>{{i.d_id.speciality}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Patient name: </strong></td>
+                        <td>{{i.P_name}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Patient Age: </strong></td>
+                        <td>{{i.P_age}}</td>
+                    </tr>
+                </tbody>
+                <tbody class="expand-details">
+                    <tr>
+                        <td><strong>State: </strong></td>
+                        <td>{{i.state}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>City: </strong></td>
+                        <td>{{i.dist}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Appointment Time: </strong></td>
+                        <td>{{i.appoint_time}}</td>
+                    </tr>
+                    <tr>
+                        <td>Hospital:</td>
+                        <td>{{i.d_id.hospital}}</td>
+                    </tr>
+                    <tr>
+                        <td>Address:</td>
+                        <td>{{i.d_id.address}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><button class="cancel-appoint" data-appointid="{{ i.id }}">Cancel</button></td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No any appointment scheduled</p>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        
+        let expand_btn = document.querySelectorAll('.expand-btn');
+        let expand_details = document.querySelectorAll('.expand-details');
+        let cancel_appoint= document.querySelectorAll('.cancel-appoint');
+        expand_btn.forEach((btn,i)=>{
+            let openFlag = false;
+            btn.addEventListener('click', (e) => {
+            let btn_img = e.currentTarget.querySelector('img');
+            btn_img.style.transition = "all 0.5s ease";
+            if (!openFlag) {
+                openFlag = true;
+                btn_img.style.transform = "rotateX(0deg)";  
+                expand_details[i].style.display='table-row-group';
+
+            }
+            else {
+                openFlag = false;
+                btn_img.style.transform = "rotateX(180deg)";
+                expand_details[i].style.display='none';
+            }
+
+        });
+        })
+
+        cancel_appoint.forEach(btn => {
+            btn.addEventListener('click',(event)=>{
+                try{
+                    fetch('/cancelappointment/',{
+                        method:'POST',
+                        headers:{
+                            'Content-Type':'application/json',
+                            'X-CSRFToken':getCSRF(),
+                        },
+                        body:JSON.stringify({
+                            'appointmentId':`${event.currentTarget.dataset.appointid}`,
+                            'userid':'{{user.id}}',
+                        })
+                        
+                    })
+                    .then((res,rej)=>{
+                        res.json();
+                    })
+                    .then((data)=>{
+                        if(data.status==200){
+                            window.location.reload()
+                        }
+                        console.log(data);
+                    })
+                }
+                catch(e){
+                    console.log(e);
+                }
+        })
+        });
+        
+function getCSRF(){
+    let cookie=document.cookie;
+    if(cookie!==''&& cookie!== undefined){
+        data=cookie.split(';');
+        for(let i of data){
+            let trimed= i.trim();
+            if(trimed.startsWith('csrftoken=')){
+                let csrf=trimed.split('=');
+                return csrf[1];
+            };
+            return '';
+            
+        }
+    }
+    return '';
+}   
+    </script>
+</body>
+
+</html>

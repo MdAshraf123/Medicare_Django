@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor Profile</title>
+  <link rel="stylesheet" href="profile.css">
+  <style>
+    body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f3f4f6;
+  margin: 0;
+  padding: 40px;
+}
+
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-card {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.profile-image {
+  flex: 1;
+  background-color: #edf2f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+label{
+    width: 180px;
+    height: 180px;
+}
+.profile-image label img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #2b2d42;
+}
+
+.profile-info {
+  flex: 2;
+  padding: 30px;
+}
+
+.profile-info h2 {
+  margin-bottom: 10px;
+  color: #2b2d42;
+}
+
+.profile-info p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <div class="profile-card">
+      <div class="profile-image">
+        <label for="docprofile"   >
+            <img src="/static/images/doctor.jpg" alt="Doctor Image" />
+        </label>
+        <input hidden type="file" accept="images/*" id="docprofile">
+      </div>
+      <div class="profile-info">
+        <h2>Dr. Md Ashraf</h2>
+        <p><strong>Specialization:</strong> Cardiologist</p>
+        <p><strong>Experience:</strong> 8 years</p>
+        <p><strong>Email:</strong> dr.ashraf@example.com</p>
+        <p><strong>Phone:</strong> +91-9876543210</p>
+        <p><strong>Location:</strong> Amritsar, Punjab</p>
+        <p><strong>Working Hours:</strong> 10:00 AM – 4:00 PM</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded',function(){
+      let img_upload=document.getElementById('docprofile');
+      
+      img_upload.addEventListener('change',(e)=>{
+        let file=e.target.files[0]
+        fetch("{% url 'main:profile_upload' %}",{
+          method:'POST',
+          headers:{
+            'Content-Type':'image/*',
+            'X-CSRFToken':getCSRF(),
+            'Accept':'application/json'
+          },
+          body:{
+            'profile_image':file,
+          }
+        })
+        .then((response)=>{
+          response.json();
+        })
+      })
+      console.log(img_upload);
+    })
+    function getCSRF(){
+      let cookies=document.cookie;
+      let cookieList=cookies.split(';');
+      if(cookies==''||cookies==Undefined)
+        return '';
+      for(let cookie of cookieList){
+        if(cookie.trim().startswith('csrftoken=')){
+          return cookie.split('=')[1];
+        }
+      }
+    }
+  </script>
+</body>
+</html>

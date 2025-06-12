@@ -3,11 +3,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse,JsonResponse
 from .forms import myform,Appointmentform
 from .models import Doctor,Appointment
+from django.contrib.auth.models import User
+import json
+from razorpay import Client  # Make sure you imported this
 import razorpay
 from django.conf import settings
-
-
-
 
 # Create your views here.
 def dmainpage(request):
@@ -48,21 +48,19 @@ def searchBar(request):
 
     return render(request,'core/dhome.html',context={'data':doctors})
 
-
 def appointform(request,idd):
     if request.method=='POST':
-        print('this is doctor id',idd)
-        form = Appointmentform(request.POST)
-        doctorId=Doctor.objects.get(id=idd)
-        if form.is_valid():
-            appointment = form.save(commit=False)
-            appointment.d_id = doctorId
-            appointment.userid=request.user.id
-            appointment.save()
+        # form = Appointmentform(request.POST)
+        # doctorId=Doctor.objects.get(id=idd)
+        # if form.is_valid():
+
+        #     appointment = form.save(commit=False)
+        #     appointment.d_id = doctorId
+        #     appointment.userid=request.user.id
+        #     appointment.save()
             return HttpResponse('booking successfull')
     else:
         appointForm=Appointmentform()
-        print('this is req obj',request)
         return render(request,'core/appointForm.html',{'form':appointForm,'id':idd})
     
 
@@ -77,7 +75,6 @@ def create_order(request):
     if request.method == "POST":
         # You can calculate the amount dynamically based on your form input
         amount = 10000  # Example: 500.00 INR = 50000 paise
-
         # Create Razorpay order
         order = client.order.create(dict(amount=amount, currency="INR", payment_capture="1"))
         
@@ -93,18 +90,24 @@ def create_order(request):
 @csrf_exempt
 def verify_payment(request):
     if request.method == "POST":
-        payment_data = request.POST  # Extract payment response from frontend
-
+        payment_data = request.POST.dict() 
+        if not payment_data:
+            payment_verification= json.loads(request.body) # Extract payment response from frontend
+            payment_data= payment_verification.get("paymentResponse")
+            appoint_data= payment_verification.get("formData")
         # Verify payment signature
         try:
             client.utility.verify_payment_signature(payment_data)
             # If the signature is verified, mark the payment as successful
             order_id = payment_data.get("razorpay_order_id")
             payment_id = payment_data.get("razorpay_payment_id")
-            # appointment = Appointment.objects.get(order_id=order_id)
-            # appointment.payment_status = "Paid"
-            # appointment.payment_id = payment_id
-            # appointment.save()
+            appointmentForm= Appointmentform(appoint_data)
+
+            if appointmentForm.is_valid():
+                obj=appointmentForm.save(commit=False)
+                obj.userid=request.user
+                obj.d_id= Doctor.objects.get(id= appoint_data.get('d_id'))
+                obj.save()
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
