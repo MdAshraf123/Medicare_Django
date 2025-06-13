@@ -43,7 +43,7 @@ class Appointment(models.Model):
     P_sex=models.CharField(max_length=2, choices=Gender.choices , default=Gender.MALE)
     P_contact=models.CharField(max_length=10, default='1234567890',validators=[RegexValidator(r"^\d{10}$","Enter 10 digit phone no.")])
     state=models.CharField(max_length=25)
-    dist=models.CharField(max_length=25)
+    dist=models.CharField(max_length=25)#should be added village field
     appoint_date=models.DateField()
     appoint_time=models.TimeField(null=True, blank=True)
     is_complete=models.BooleanField(default=False)

@@ -8,12 +8,13 @@ from .form import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
-from doctors.models import Appointment
+from doctors.models import Appointment,Doctors
 from django.http import JsonResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.templatetags.static import static
-from utils.decorators import doctor_required
+from utils.decorators import doctor_required,patient_required
+from django.contrib import messages
 from decouple import config
 import base64
 import requests
@@ -38,13 +39,18 @@ def login_view(request):
         form = AuthenticationForm(request,data=request.POST)
         if form.is_valid():     
             user = form.get_user()
-            login(request, user)
-            return redirect('main:home')
+            if hasattr(user,'patients'):
+                login(request, user)
+                return redirect('main:home')
+            elif hasattr(user, 'doctors'):
+                login(request, user)
+                return redirect('main:doctor_dashboard')
     else:
         form = AuthenticationForm()
         return render(request, 'registration/login.html', {'form': form })
 
 @login_required
+# @patient_required
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
@@ -59,6 +65,7 @@ def homepage(request ):
     return render(request,f'core/home.html',{'TopD':TopD,})
 
 @login_required
+@patient_required
 def bookedAppointment(request):
     obj=Appointment.objects.filter(patient=request.user)
     # obj2=Appointment.Doctor.objects.filter(id=obj.d_id)
@@ -163,6 +170,7 @@ def updateUpload(request,profile_image):
         print(f"Failed to upload image: {response.status_code}")
 
 @login_required
+@patient_required
 @require_http_methods('POST')       
 def cancelAppoint(request):
     if request.method=='POST':
@@ -195,9 +203,16 @@ def cancelAppoint(request):
 @login_required
 @doctor_required
 def doctor_dashboard(request):
-    return render(request, 'doctors/doctor_dashboard.html')
+    doctor=request.user.doctors
+    appointments=Appointment.objects.filter(doctor=request.user)
+    context={
+        'appointments':appointments,
+        'doctor':doctor,
+        }
+    return render(request, 'doctors/doctor_dashboard.html',context)
 
 @login_required
 @doctor_required
 def doc_profile(request):
+    messages.success(request, 'Doctor Profile')
     return render(request, 'doctors/doctorprofile.html')

@@ -24,19 +24,28 @@
                     <li><a href="{% url 'main:profile' %}">Profile</a></li>
                     <li><a href="#">Patients</a></li>
                     <li><a href="#">Messages</a></li>
-                    <li><a href="#">Logout</a></li>
+                    <li><a href="{% url 'main:logout' %}">Logout</a></li>
                 </ul>
             </nav>
         </aside>
 
         <main class="main-content">
             <header class="header">
-                <h1>Welcome, Dr. Ashraf</h1>
-                <p>Specialist: Cardiologist</p>
+                <h1>Welcome, Dr. {{ doctor.name }}</h1>
+                <p>Specialist: {{ doctor.speciality }}</p>
             </header>
 
             <section class="appointments-section">
+                {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                    <li style="color: red;">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
                 <h2>Today's Appointments</h2>
+                <input type="date" id="appoint-date" >
                 <table class="appointments-table">
                     <thead>
                         <tr>
@@ -45,22 +54,29 @@
                             <th>Age</th>
                             <th>Gender</th>
                             <th>Contact</th>
+                            <th>Address</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for appointment in appointments %}
                         <tr>
                             <td>10:00 AM</td>
-                            <td>John Doe</td>
-                            <td>32</td>
-                            <td>Male</td>
-                            <td>9876543210</td>
+                            <td>{{ appointment.P_name }}</td>
+                            <td>{{ appointment.P_age }}</td>
+                            <td>{{ appointment.P_sex }}</td>
+                            <td><a href="https://wa.me/919576188048">{{ appointment.P_contact }}</a></td>
+                            <td>{{ appointment.aa}}</td>
+                            <td>{{ appointment.is_complete }}</td>
                         </tr>
+                        {% endfor %}
                         <tr>
                             <td>11:30 AM</td>
                             <td>Jane Smith</td>
                             <td>28</td>
                             <td>Female</td>
-                            <td>9123456789</td>
+                            <td><a href="https://wa.me/919576188048">9123456789</a></td>
+                            <td>complete</td>
                         </tr>
                         <!-- More rows as needed -->
                     </tbody>
@@ -68,5 +84,15 @@
             </section>
         </main>
     </div>
+    <script>
+        let appoint_date=document.getElementById('appoint-date');
+        let date=new Date()
+        let min=date.toISOString().split('T')[0];
+        date.setDate(date.getDate()+3);
+        let max=date.toISOString().split('T')[0];
+        appoint_date.setAttribute('min', min);
+        appoint_date.setAttribute('max', max);
+
+    </script>
 </body>
 </html>

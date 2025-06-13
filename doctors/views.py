@@ -4,6 +4,8 @@ from django.http import HttpResponse,JsonResponse
 from .forms import myform,Appointmentform
 from .models import Doctors,Appointment
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from utils.decorators import doctor_required,patient_required
 import json
 from razorpay import Client  # Make sure you imported this
 import razorpay
@@ -48,6 +50,8 @@ def searchBar(request):
 
     return render(request,'core/dhome.html',context={'data':doctors})
 
+@login_required
+@patient_required
 def appointform(request,idd):
     if request.method=='POST':
         # form = Appointmentform(request.POST)
@@ -69,7 +73,8 @@ def appointform(request,idd):
 
 # Initialize Razorpay client
 client = razorpay.Client(auth=( settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRETE))
-
+@login_required
+@patient_required
 @csrf_exempt
 def create_order(request):
     if request.method == "POST":
@@ -86,7 +91,8 @@ def create_order(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-
+@login_required
+@patient_required
 @csrf_exempt
 def verify_payment(request):
     if request.method == "POST":
