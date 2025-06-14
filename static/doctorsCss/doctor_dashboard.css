@@ -101,3 +101,14 @@ body {
 .appointments-table th {
     background-color: #edf2f4;
 }
+#appoint-date{
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+#appoint-date:focus{
+    outline-width: 10px;
+    outline-color: rgba(0, 0, 255, 0.838);
+    
+}

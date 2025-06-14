@@ -38,10 +38,11 @@
   padding: 20px;
 }
 label{
+    display: block;
     width: 180px;
     height: 180px;
 }
-.profile-image label img {
+.profile-image img {
   width: 180px;
   height: 180px;
   border-radius: 50%;
@@ -54,16 +55,28 @@ label{
   padding: 30px;
 }
 
-.profile-info h2 {
-  margin-bottom: 10px;
-  color: #2b2d42;
+
+.profile-info table{
+  width: 100%;
+}
+.profile-info table tbody tr td{
+  padding:5px;
+
+}
+.profile-info table tbody tr td:nth-child(even){
+  text-align: right;
+}
+#edit-btn{
+  padding: 5px 15px;
+  background-color: blue;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  margin: 20px;
+  float: center;
 }
 
-.profile-info p {
-  margin: 8px 0;
-  font-size: 16px;
-  color: #333;
-}
 
   </style>
 </head>
@@ -71,20 +84,55 @@ label{
   <div class="profile-container">
     <div class="profile-card">
       <div class="profile-image">
-        <label for="docprofile"   >
-            <img src="/static/images/doctor.jpg" alt="Doctor Image" />
-        </label>
-        <input hidden type="file" accept="images/*" id="docprofile">
+            <img src="{{ doctor.doctor_face }}" alt="Doctor Image" />
       </div>
       <div class="profile-info">
-        <h2>Dr. Md Ashraf</h2>
-        <p><strong>Specialization:</strong> Cardiologist</p>
-        <p><strong>Experience:</strong> 8 years</p>
-        <p><strong>Email:</strong> dr.ashraf@example.com</p>
-        <p><strong>Phone:</strong> +91-9876543210</p>
-        <p><strong>Location:</strong> Amritsar, Punjab</p>
-        <p><strong>Working Hours:</strong> 10:00 AM – 4:00 PM</p>
+        <table>
+          <h1>Dr. {{ doctor.name }}</h1>
+          <tbody>
+            <tr>
+              <td><strong>Specialization:</strong></td>
+              <td>{{ doctor.speciality }}</td>
+            </tr>
+            <tr>
+              <td><strong>Degree:</strong></td>
+              <td>{{ doctor.degree }}</td>
+            </tr>
+            <tr>
+              <td><strong>Experience:</strong></td>
+              <td>{{ doctor.experience }}</td>
+            </tr>
+            <tr>
+              <td><strong>Hospital:</strong></td>
+              <td>{{ doctor.hospital }}</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Patient count:</strong></td>
+              <td>{{ doctor.p_count }}</td>
+            </tr>
+            <tr>
+              <td><strong>Location:</strong></td>
+              <td>{{ doctor.address }}</td>
+            </tr>
+            <tr>
+              <td><strong>Working Hours:</strong></td>
+              <td>10:00 AM – 4:00 PM</td>
+            </tr>
+            <tr>
+              <td><strong>About:</strong></td>
+              <td>{{ doctor.about }}</td>
+            </tr>
+            <tr>
+              <td><strong>Map</strong></td>
+              <td>{{ doctor.map_location }}</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <a href="{% url 'main:editProfile' %}" id="edit-btn">Edit</a> 
       </div>
+      
     </div>
   </div>
   <script>

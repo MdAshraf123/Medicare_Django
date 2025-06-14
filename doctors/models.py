@@ -12,8 +12,9 @@ class Doctors(models.Model):
     about=models.CharField(max_length=175,default='Nothing')
     hospital=models.CharField(max_length=25)
     address=models.CharField(max_length=50)
-    map_location=models.CharField(max_length=320, default='Empty')
+    map_location=models.CharField(max_length=700, default='Empty.com')
     p_count=models.IntegerField(default=0)
+    time=models.CharField(max_length=50, default="10AM-8PM")
     experience=models.IntegerField(validators=[MaxValueValidator(80), MinValueValidator(0)], default=0)
     rating=models.FloatField(validators=[MaxValueValidator(5),MinValueValidator(0)],default=0)
     

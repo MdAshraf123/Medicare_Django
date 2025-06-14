@@ -16,4 +16,5 @@ urlpatterns=[
     path('cancelappointment/', views.cancelAppoint, name="cancelAppoint"),
     path('dashboard/',views.doctor_dashboard, name='doctor_dashboard'),
     path('docprofile/',views.doc_profile, name='profile'),
+    path('editProfile/',views.editdoctorprofile, name='editProfile'),
 ]

@@ -87,11 +87,18 @@
     <script>
         let appoint_date=document.getElementById('appoint-date');
         let date=new Date()
+        appoint_date.value=date.getDate();
         let min=date.toISOString().split('T')[0];
-        date.setDate(date.getDate()+3);
-        let max=date.toISOString().split('T')[0];
-        appoint_date.setAttribute('min', min);
-        appoint_date.setAttribute('max', max);
+            date.setDate(date.getDate()+3);
+            let max=date.toISOString().split('T')[0];
+            appoint_date.setAttribute('min', min);
+            appoint_date.setAttribute('max', max);
+
+        appoint_date.addEventListener('change',(event)=>{
+
+            
+        })
+        
 
     </script>
 </body>

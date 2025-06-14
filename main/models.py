@@ -26,7 +26,7 @@ class Patients(models.Model):
     location=models.CharField(max_length=50, null=False, blank=True)#name should be address
 
     def isProfileComplete(self):
-        return bool(self.patient and self.phone_number and self.location)
+        return bool(self.phone_number and self.location)
     
 
     def __str__(self):

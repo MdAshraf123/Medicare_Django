@@ -4,7 +4,7 @@ from main.models import Topdoc
 from main.models import UserProfileImages,Patients
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
-from .form import CustomUserCreationForm
+from .form import CustomUserCreationForm,ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
@@ -93,7 +93,7 @@ def saveProfileChages(request):
         email=request.POST.get('email')
         phone=request.POST.get('phone')
         loc=request.POST.get('location')
-        patientUser, is_created =Patients.objects.get_or_create(user=user1)
+        patientUser, is_created =Patients.objects.get_or_create(patient=user1)
         patientUser.phone_number =phone
         patientUser.location=loc
         patientUser.save()
@@ -214,5 +214,60 @@ def doctor_dashboard(request):
 @login_required
 @doctor_required
 def doc_profile(request):
+    doctor=Doctors.objects.get(doctor=request.user)
     messages.success(request, 'Doctor Profile')
-    return render(request, 'doctors/doctorprofile.html')
+    return render(request, 'doctors/doctorprofile.html',{'doctor':doctor})
+
+@login_required
+@doctor_required
+def editdoctorprofile(request):
+    doctor=request.user.doctors
+    if request.method=='POST':
+        form=ProfileEditForm(request.POST, request.FILES, instance=doctor)      
+        if form.is_valid():
+            file=request.FILES.get('doctor_face')
+            if file:
+                image_url = upload_image_to_github(request,file)
+                doctor.doctor_face = image_url
+            form.save()
+            return HttpResponse( 'Successfully updated')
+    else:
+        form=ProfileEditForm(instance=doctor)
+    return render(request,'doctors/editProfile.html',{'form':form})
+
+
+def upload_image_to_github(request,file):
+
+    GITHUB_TOKEN = config("GITHUB_TOKEN")
+    REPO = "MdAshraf123/media_cdn"
+    BRANCH = 'main'
+    IMAGE_NAME = f"image{request.user.id}.jpeg"
+    IMAGE_FOLDER = "profile_images"
+    filename = f"dimage{request.user.id}.jpeg"
+    content = base64.b64encode(file.read()).decode('utf-8')
+    api_url = f'https://api.github.com/repos/{REPO}/contents/{IMAGE_FOLDER}/{filename}'
+    
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json"
+    }
+    data = {
+        "message": f"Upload {filename}",
+        "branch": BRANCH,
+        "content": content
+    }
+    get_resp=requests.get(api_url,headers=headers)
+    if get_resp.status_code==200:
+        sha=get_resp.json()['sha']
+        data['sha']=sha
+    else:
+        sha=None
+
+    
+
+    response = requests.put(api_url, json=data, headers=headers)
+    
+    if response.status_code in [201, 200]:
+        return f"https://raw.githubusercontent.com/{REPO}/{BRANCH}/{IMAGE_FOLDER}/{filename}"
+    else:
+        raise Exception("GitHub upload failed: " + response.text)
