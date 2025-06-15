@@ -19,6 +19,7 @@ from decouple import config
 import base64
 import requests
 import json
+from datetime import date
 
 
 # Create your views here.
@@ -67,7 +68,7 @@ def homepage(request ):
 @login_required
 @patient_required
 def bookedAppointment(request):
-    obj=Appointment.objects.filter(patient=request.user)
+    obj=Appointment.objects.filter(patient=request.user, is_complete=False)
     # obj2=Appointment.Doctor.objects.filter(id=obj.d_id)
     context = {
         'appointData':obj,    
@@ -203,11 +204,24 @@ def cancelAppoint(request):
 @login_required
 @doctor_required
 def doctor_dashboard(request):
+
     doctor=request.user.doctors
-    appointments=Appointment.objects.filter(doctor=request.user)
+    appointments=Appointment.objects.filter(doctor=request.user, appoint_date=str(date.today()))
+    date1=str(date.today())
+    if request.method=='POST':
+        date1=request.POST.get('date',str(date.today()))
+        appointments=Appointment.objects.filter(doctor=request.user, appoint_date=date1)
+    elif request.method=="PUT":
+        data=json.loads(request.body)
+        id1=data.get('appointid')
+        appoint=Appointment.objects.get(id=id1)
+        appoint.is_complete=True
+        appoint.save()
+        # return JsonResponse({'status':'success',},status=200)
     context={
         'appointments':appointments,
         'doctor':doctor,
+        'date1':date1,
         }
     return render(request, 'doctors/doctor_dashboard.html',context)
 

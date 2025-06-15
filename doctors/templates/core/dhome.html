@@ -54,22 +54,22 @@
         
     </div>
     <div class="main-content-div">
-        {% if data %}
-        {% for i in data %}
+        {% if doctors %}
+        {% for doctor in doctors %}
         <div class="container">
             <div class="content">
                 
-                <div class="img-container"><img src="" alt=""></div>
+                <div class="img-container"><img src="{{ doctor.doctor_face }}" alt=""></div>
                 <div class="rating-front">
                     <div class="D-name">
                         <table style="width: 100%;">
                             <tr>
-                                <td colspan="2"><h2>Dr {{i.name}} </h2></td>
+                                <td colspan="2"><h2>Dr {{doctor.name}} </h2></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td style="width:170px;">
-                                    <h4>{{i.speciality}}</h4>
+                                    <h4>{{doctor.speciality}}</h4>
                                 </td>
                                 <td>
                                     <div class="stars">
@@ -92,12 +92,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2"><p class="font-weight-100">{{i.hospital}},</p></td>
+                                <td colspan="2"><p class="font-weight-100">{{doctor.hospital}},</p></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td colspan="2" >
-                                   <p class="font-weight-100">{{i.address}}</p> 
+                                   <p class="font-weight-100">{{doctor.address}}</p> 
                                 </td>
                                 <td></td>
                             </tr>
@@ -110,8 +110,8 @@
                         <td> <h4>Patients</h4> </td>
                     </tr>
                     <tr>
-                        <td ><p class="font-weight-100">5 years</p></td>
-                        <td ><p class="font-weight-100">1000+</p></td>
+                        <td ><p class="font-weight-100">{{ doctor.experience }} years</p></td>
+                        <td ><p class="font-weight-100">{{ doctor.p_count }}+</p></td>
                     </tr>
                     <tr>
                         <td colspan="2"><h4>About</h4></td>
@@ -119,18 +119,13 @@
                     </tr>
                     <tr>
                         <td colspan="2" >
-                            <p class="  paragraph-area font-weight-100">
-                                Dr Henry is a Dermatolgist with a experience of a 5.6 years.
-                                 And has been working in Amey hospital from 4 years.
-                                 And has been working in Amey hospital from 4 years.
-                                
-                            </p>
+                            <p class="  paragraph-area font-weight-100">{{ doctor.about }}</p>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
                         <td><button  class="FlipButton d-profile-buttons"> View location</button></td>
-                        <td> <a class="d-profile-buttons" href="{% url 'appointform' i.id %}">Book now</a></td>
+                        <td> <a class="d-profile-buttons" href="{% url 'appointform' doctor.id %}">Book now</a></td>
                     </tr>
     
     
@@ -138,8 +133,8 @@
                 </div>
                 <div class="location-back">
                     <div class="reFlipbutton-div"><button class="reFlipbutton-button"><img src="{% static 'images/arrow.png' %}" alt="back" ></button></div>
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d783650.4486104075!2d75.07740627812498!3d30.660839899999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39101a5dabbe37e9%3A0x29ae90fc945d6cbc!2sAGC%20Amritsar!5e1!3m2!1sen!2sin!4v1735284535192!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-
+                    <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d783650.4486104075!2d75.07740627812498!3d30.660839899999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39101a5dabbe37e9%3A0x29ae90fc945d6cbc!2sAGC%20Amritsar!5e1!3m2!1sen!2sin!4v1735284535192!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+                    {{ doctor.map_location|safe }}
                 </div>
                 
             </div>
@@ -196,6 +191,7 @@ document.addEventListener('DOMContentLoad' , ()=>{
     let content=document.querySelectorAll('.content');
     let text_field=document.querySelector('.text-field');
     let search_button=document.querySelector('#search');
+    
 {% endblock declareVariables %}
 {% block addJSCode %}
     view_location.forEach((button, index) =>{

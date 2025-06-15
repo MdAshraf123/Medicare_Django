@@ -14,7 +14,7 @@ from django.conf import settings
 # Create your views here.
 def dmainpage(request):
     doctors = Doctors.objects.all()
-    return render(request,'core/dhome.html',context={'data':doctors})
+    return render(request,'core/dhome.html',context={'doctors':doctors})
 
 def response(request,speciality):
     D={ 
@@ -31,7 +31,7 @@ def response(request,speciality):
         doctors=Doctors.objects.all()
     else:
         doctors = Doctors.objects.filter(speciality=D[speciality])
-    return render(request,'core/dhome.html',{'data':doctors})
+    return render(request,'core/dhome.html',{'doctors':doctors})
 
 def searchBar(request):
     valu=0 
@@ -48,7 +48,7 @@ def searchBar(request):
     else:
         form1=myform()
 
-    return render(request,'core/dhome.html',context={'data':doctors})
+    return render(request,'core/dhome.html',context={'doctors':doctors})
 
 @login_required
 @patient_required

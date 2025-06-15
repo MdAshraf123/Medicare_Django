@@ -44,8 +44,11 @@
                 </ul>
                 {% endif %}
 
-                <h2>Today's Appointments</h2>
-                <input type="date" id="appoint-date" >
+                <h2>Appointments</h2>
+                <form id="dateForm" method="POST">
+                <input type="date" id="appoint-date" name="date" value="{{ date1 }}">
+                {% csrf_token %}
+                </form>
                 <table class="appointments-table">
                     <thead>
                         <tr>
@@ -54,7 +57,7 @@
                             <th>Age</th>
                             <th>Gender</th>
                             <th>Contact</th>
-                            <th>Address</th>
+                            <!-- <th>Address</th> -->
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -66,8 +69,12 @@
                             <td>{{ appointment.P_age }}</td>
                             <td>{{ appointment.P_sex }}</td>
                             <td><a href="https://wa.me/919576188048">{{ appointment.P_contact }}</a></td>
-                            <td>{{ appointment.aa}}</td>
-                            <td>{{ appointment.is_complete }}</td>
+                            <!-- <td>{{ appointment.aa}}</td> -->
+                            <td>
+                                {% if not appointment.is_complete %}
+                                <button class="appointDone" data-appointid="{{ appointment.id }}" >Done</button>
+                                {% endif %}
+                                {{ appointment.is_complete }}</td>
                         </tr>
                         {% endfor %}
                         <tr>
@@ -85,21 +92,55 @@
         </main>
     </div>
     <script>
+        let appointDone=document.querySelectorAll('.appointDone');
         let appoint_date=document.getElementById('appoint-date');
+        let dateForm=document.getElementById('dateForm');
         let date=new Date()
-        appoint_date.value=date.getDate();
+        
         let min=date.toISOString().split('T')[0];
-            date.setDate(date.getDate()+3);
-            let max=date.toISOString().split('T')[0];
-            appoint_date.setAttribute('min', min);
-            appoint_date.setAttribute('max', max);
-
-        appoint_date.addEventListener('change',(event)=>{
-
-            
+        date.setDate(date.getDate()+3);
+        let max=date.toISOString().split('T')[0];
+        appoint_date.setAttribute('min', min);
+        appoint_date.setAttribute('max', max);
+        
+        appoint_date.addEventListener('change',(event)=>{  
+            dateForm.submit();  
         })
         
+        appointDone.forEach((btn,i)=>{
+            btn.addEventListener('click',(e)=>{
+                let id=e.currentTarget.dataset.appointid;
+                alert("Are your sure?");
+                fetch("{% url 'main:doctor_dashboard' %}",{
+                    'method':"PUT",
+                    'headers':{
+                        'Content-Type':"application/json",
+                        'Accept':'plane/html',
+                        'X-CSRFToken':getCSRF(),
+                    },
+                    'body':JSON.stringify({
+                        'appointid':id,
+                        'status':'True',
+                    })
 
+                })
+                .then((response)=>response.json())
+                .then((data)=>{
+                    console.log(data);
+                })
+            })
+        });
+        function getCSRF(){
+            let cookie=document.cookie;
+            cookielist=cookie.split(';')
+            for(let i=0; i<cookielist.length; i++){
+                let trimed=cookielist[i].trim();
+                if(trimed.startsWith('csrftoken=')){
+                    return trimed.split('=')[1];
+                }
+            }
+            return ''
+        }
     </script>
 </body>
 </html>
